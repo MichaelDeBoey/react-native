@@ -9,6 +9,8 @@
  * @oncall react_native
  */
 
+require('../babel-register').registerForScript();
+
 const {PACKAGES_DIR, REPO_ROOT} = require('../consts');
 const translateSourceFile = require('./build-types/translateSourceFile');
 const chalk = require('chalk');
@@ -23,7 +25,14 @@ const IGNORE_PATTERN = '**/__{tests,mocks,fixtures}__/**';
 
 const SOURCE_PATTERNS = [
   // Start with Animated only
-  path.join(PACKAGES_DIR, 'react-native/Libraries/Animated/**/*.js'),
+  'react-native/Libraries/Alert/**/*.js',
+  'react-native/Libraries/ActionSheetIOS/**/*.js',
+  'react-native/Libraries/TurboModule/RCTExport.js',
+  'react-native/Libraries/Types/RootTagTypes.js',
+  'react-native/Libraries/ReactNative/RootTag.js',
+  'react-native/Libraries/Utilities/Platform.js',
+  'react-native/src/private/specs_DEPRECATED/modules/NativeAlertManager.js',
+  'react-native/src/private/specs_DEPRECATED/modules/NativeActionSheetManager.js',
   // TODO(T210505412): Include input packages, e.g. virtualized-lists
 ];
 
@@ -48,10 +57,12 @@ async function main() {
     return;
   }
 
-  const files = SOURCE_PATTERNS.flatMap(srcPath =>
-    glob.sync(path.join(srcPath, ''), {
-      nodir: true,
-    }),
+  const files = ignoreShadowedFiles(
+    SOURCE_PATTERNS.flatMap(srcPath =>
+      glob.sync(path.join(PACKAGES_DIR, srcPath), {
+        nodir: true,
+      }),
+    ),
   );
 
   console.log(
@@ -107,6 +118,28 @@ function getBuildPath(file /*: string */) /*: string */ {
       .replace(/\.flow\.js$/, '.js')
       .replace(/\.js$/, '.d.ts'),
   );
+}
+
+function ignoreShadowedFiles(files /*: Array<string> */) /*: Array<string> */ {
+  const shadowedPrefixes /*: Record<string, boolean> */ = {};
+  const result /*: Array<string> */ = [];
+
+  // Find all flow definition files that shadow other files
+  for (const file of files) {
+    if (/\.flow\.js$/.test(file)) {
+      shadowedPrefixes[file.substring(0, file.length - 8)] = true;
+    }
+  }
+
+  // Filter out all files shadowed by flow definition files
+  for (const file of files) {
+    const prefix = file.split('.')[0];
+    if (/\.flow\.js$/.test(file) || !shadowedPrefixes[prefix]) {
+      result.push(file);
+    }
+  }
+
+  return result;
 }
 
 if (require.main === module) {

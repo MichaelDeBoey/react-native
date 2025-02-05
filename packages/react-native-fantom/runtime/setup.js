@@ -14,7 +14,7 @@ import type {SnapshotConfig, TestSnapshotResults} from './snapshotContext';
 import expect from './expect';
 import {createMockFunction} from './mocks';
 import {setupSnapshotConfig, snapshotContext} from './snapshotContext';
-import NativeFantom from 'react-native/src/private/specs/modules/NativeFantom';
+import NativeFantom from 'react-native/src/private/testing/fantom/specs/NativeFantom';
 
 export type TestCaseResult = {
   ancestorTitles: Array<string>,
@@ -70,7 +70,7 @@ const rootContext: Context = {
   beforeAllHooks: [],
   beforeEachHooks: [],
   afterAllHooks: [],
-  afterEachHooks: [],
+  afterEachHooks: [validateEmptyMessageQueue],
   children: [],
   focused: false,
   skipped: false,
@@ -93,8 +93,8 @@ const globalDescribe = (global.describe = (
     beforeAllHooks: [],
     beforeEachHooks: [],
     children: [],
-    focused: focused,
-    skipped: skipped,
+    focused,
+    skipped,
   };
   currentContext.children.push(childContext);
   currentContext = childContext;
@@ -137,8 +137,8 @@ const globalIt =
         title,
         parentContext: currentContext,
         implementation,
-        focused: focused,
-        skipped: skipped,
+        focused,
+        skipped,
       });
     });
 
@@ -386,6 +386,10 @@ function reportTestSuiteResult(testSuiteResult: TestSuiteResult): void {
       ...testSuiteResult,
     }),
   );
+}
+
+function validateEmptyMessageQueue(): void {
+  NativeFantom.validateEmptyMessageQueue();
 }
 
 global.$$RunTests$$ = () => {

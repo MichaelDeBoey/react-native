@@ -10,12 +10,12 @@
  * @fantom_flags enableAccessToHostTreeInFabric:true
  */
 
-import {NativeEventCategory} from '../../../src/private/specs/modules/NativeFantom';
+import {NativeEventCategory} from '../../../src/private/testing/fantom/specs/NativeFantom';
 import ensureInstance from '../../../src/private/utilities/ensureInstance';
 import ReactNativeElement from '../../../src/private/webapis/dom/nodes/ReactNativeElement';
 import TextInput from '../../Components/TextInput/TextInput';
 import Text from '../../Text/Text';
-import * as Fantom from '@react-native/fantom';
+import Fantom from '@react-native/fantom';
 import * as React from 'react';
 import {startTransition, useDeferredValue, useEffect, useState} from 'react';
 
@@ -140,8 +140,6 @@ describe('discrete event category', () => {
     expect(deferredTextNativeElement.textContent).toBe(
       'Deferred text: transition',
     );
-
-    root.destroy();
   });
 });
 
@@ -253,7 +251,5 @@ describe('continuous event category', () => {
     expect(deferredTextNativeElement.textContent).toBe(
       'Deferred text: transition',
     );
-
-    root.destroy();
   });
 });

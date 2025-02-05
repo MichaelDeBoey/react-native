@@ -23,38 +23,45 @@ namespace facebook::react {
 struct CSSRatio {
   float numerator{};
   float denominator{};
+
+  constexpr bool operator==(const CSSRatio& rhs) const = default;
+
+  constexpr bool isDegenerate() const {
+    // If either number in the <ratio> is 0 or infinite, it represents a
+    // degenerate ratio (and, generally, won’t do anything).
+    // https://www.w3.org/TR/css-values-4/#ratios
+    return numerator == 0.0f ||
+        numerator == std::numeric_limits<float>::infinity() ||
+        denominator == 0.0f ||
+        denominator == std::numeric_limits<float>::infinity();
+  }
 };
 
 template <>
 struct CSSDataTypeParser<CSSRatio> {
-  static constexpr auto consumePreservedToken(
-      const CSSPreservedToken& token,
-      CSSSyntaxParser& parser) -> std::optional<CSSRatio> {
+  static constexpr auto consume(CSSSyntaxParser& parser)
+      -> std::optional<CSSRatio> {
     // <ratio> = <number [0,∞]> [ / <number [0,∞]> ]?
     // https://www.w3.org/TR/css-values-4/#ratio
-    if (isValidRatioPart(token.numericValue())) {
-      float numerator = token.numericValue();
+    auto numerator = parseNextCSSValue<CSSNumber>(parser);
+    if (!std::holds_alternative<CSSNumber>(numerator)) {
+      return {};
+    }
 
+    auto numeratorValue = std::get<CSSNumber>(numerator).value;
+    if (numeratorValue >= 0) {
       auto denominator =
           peekNextCSSValue<CSSNumber>(parser, CSSDelimiter::Solidus);
       if (std::holds_alternative<CSSNumber>(denominator) &&
-          isValidRatioPart(std::get<CSSNumber>(denominator).value)) {
-        parser.consumeComponentValue(CSSDelimiter::Solidus);
-        return CSSRatio{numerator, std::get<CSSNumber>(denominator).value};
+          std::get<CSSNumber>(denominator).value >= 0) {
+        parseNextCSSValue<CSSNumber>(parser, CSSDelimiter::Solidus);
+        return CSSRatio{numeratorValue, std::get<CSSNumber>(denominator).value};
       }
 
-      return CSSRatio{numerator, 1.0f};
+      return CSSRatio{numeratorValue, 1.0f};
     }
 
     return {};
-  }
-
- private:
-  static constexpr bool isValidRatioPart(float value) {
-    // If either number in the <ratio> is 0 or infinite, it represents a
-    // degenerate ratio (and, generally, won’t do anything).
-    // https://www.w3.org/TR/css-values-4/#ratios
-    return value > 0.0f && value != +std::numeric_limits<float>::infinity();
   }
 };
 

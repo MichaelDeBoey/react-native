@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<a84fe2f37a8afbd6d2015a0d28f2c878>>
+ * @generated SignedSource<<47adc632fa375677571527241406f11f>>
  */
 
 /**
@@ -31,10 +31,6 @@ class ReactNativeFeatureFlagsDefaults : public ReactNativeFeatureFlagsProvider {
     return false;
   }
 
-  bool completeReactInstanceCreationOnBgThreadOnAndroid() override {
-    return true;
-  }
-
   bool disableMountItemReorderingAndroid() override {
     return false;
   }
@@ -48,10 +44,6 @@ class ReactNativeFeatureFlagsDefaults : public ReactNativeFeatureFlagsProvider {
   }
 
   bool enableCppPropsIteratorSetter() override {
-    return false;
-  }
-
-  bool enableDeletionOfUnmountedViews() override {
     return false;
   }
 
@@ -151,8 +143,8 @@ class ReactNativeFeatureFlagsDefaults : public ReactNativeFeatureFlagsProvider {
     return false;
   }
 
-  bool initEagerTurboModulesOnNativeModulesQueueAndroid() override {
-    return true;
+  bool fuseboxNetworkInspectionEnabled() override {
+    return false;
   }
 
   bool lazyAnimationCallbacks() override {
@@ -179,15 +171,7 @@ class ReactNativeFeatureFlagsDefaults : public ReactNativeFeatureFlagsProvider {
     return false;
   }
 
-  bool useImmediateExecutorInAndroidBridgeless() override {
-    return true;
-  }
-
   bool useNativeViewConfigsInBridgelessMode() override {
-    return false;
-  }
-
-  bool useOptimisedViewPreallocationOnAndroid() override {
     return false;
   }
 

@@ -26,7 +26,10 @@ import type IntersectionObserverEntry from '../IntersectionObserverEntry';
 
 import * as Systrace from '../../../../../Libraries/Performance/Systrace';
 import warnOnce from '../../../../../Libraries/Utilities/warnOnce';
-import {getInstanceHandle, getShadowNode} from '../../dom/nodes/ReadOnlyNode';
+import {
+  getInstanceHandle,
+  getNativeNodeReference,
+} from '../../dom/nodes/internals/NodeInternals';
 import {createIntersectionObserverEntry} from '../IntersectionObserverEntry';
 import NativeIntersectionObserver from '../specs/NativeIntersectionObserver';
 
@@ -68,7 +71,7 @@ function setTargetForInstanceHandle(
 // also needs to be kept here because React removes the link when unmounting.
 const targetToShadowNodeMap: WeakMap<
   ReactNativeElement,
-  ReturnType<typeof getShadowNode>,
+  ReturnType<typeof getNativeNodeReference>,
 > = new WeakMap();
 
 /**
@@ -132,8 +135,8 @@ export function observe({
     return false;
   }
 
-  const targetShadowNode = getShadowNode(target);
-  if (targetShadowNode == null) {
+  const targetNativeNodeReference = getNativeNodeReference(target);
+  if (targetNativeNodeReference == null) {
     // The target is disconnected. We can't observe it anymore.
     return false;
   }
@@ -151,7 +154,7 @@ export function observe({
   setTargetForInstanceHandle(instanceHandle, target);
 
   // Same for the mapping between the target and its shadow node.
-  targetToShadowNodeMap.set(target, targetShadowNode);
+  targetToShadowNodeMap.set(target, targetNativeNodeReference);
 
   if (!isConnected) {
     NativeIntersectionObserver.connect(notifyIntersectionObservers);
@@ -160,7 +163,7 @@ export function observe({
 
   NativeIntersectionObserver.observe({
     intersectionObserverId,
-    targetShadowNode,
+    targetShadowNode: targetNativeNodeReference,
     thresholds: registeredObserver.observer.thresholds,
     rootThresholds: registeredObserver.observer.rnRootThresholds,
   });
@@ -187,8 +190,8 @@ export function unobserve(
     return;
   }
 
-  const targetShadowNode = targetToShadowNodeMap.get(target);
-  if (targetShadowNode == null) {
+  const targetNativeNodeReference = targetToShadowNodeMap.get(target);
+  if (targetNativeNodeReference == null) {
     console.error(
       'IntersectionObserverManager: could not find registration data for target',
     );
@@ -197,7 +200,7 @@ export function unobserve(
 
   NativeIntersectionObserver.unobserve(
     intersectionObserverId,
-    targetShadowNode,
+    targetNativeNodeReference,
   );
 }
 

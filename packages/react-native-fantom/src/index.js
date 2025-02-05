@@ -15,13 +15,13 @@ import type {
 import type {MixedElement} from 'react';
 
 import ReactNativeElement from '../../react-native/src/private/webapis/dom/nodes/ReadOnlyNode';
-import {getShadowNode} from '../../react-native/src/private/webapis/dom/nodes/ReadOnlyNode';
 import * as Benchmark from './Benchmark';
 import getFantomRenderedOutput from './getFantomRenderedOutput';
 import ReactFabric from 'react-native/Libraries/Renderer/shims/ReactFabric';
 import NativeFantom, {
   NativeEventCategory,
-} from 'react-native/src/private/specs/modules/NativeFantom';
+} from 'react-native/src/private/testing/fantom/specs/NativeFantom';
+import {getNativeNodeReference} from 'react-native/src/private/webapis/dom/nodes/internals/NodeInternals';
 
 let globalSurfaceIdCounter = 1;
 
@@ -57,7 +57,13 @@ class Root {
     globalSurfaceIdCounter += 10;
   }
 
-  render(element: MixedElement) {
+  render(element: MixedElement): void {
+    if (!flushingQueue) {
+      throw new Error(
+        'Unexpected call to `render` outside of the event loop. Please call `render` within a `runTask` callback.',
+      );
+    }
+
     if (!this.#hasRendered) {
       NativeFantom.startSurface(
         this.#surfaceId,
@@ -71,8 +77,8 @@ class Root {
     ReactFabric.render(element, this.#surfaceId, null, true);
   }
 
-  getMountingLogs(): Array<string> {
-    return NativeFantom.getMountingManagerLogs(this.#surfaceId);
+  takeMountingManagerLogs(): Array<string> {
+    return NativeFantom.takeMountingManagerLogs(this.#surfaceId);
   }
 
   destroy() {
@@ -97,7 +103,7 @@ const DEFAULT_TASK_PRIORITY = schedulerPriorityImmediate;
  * If the work loop is running, it will be executed according to its priority.
  * Otherwise, it will wait in the queue until the work loop runs.
  */
-export function scheduleTask(task: () => void | Promise<void>) {
+function scheduleTask(task: () => void | Promise<void>) {
   nativeRuntimeScheduler.unstable_scheduleCallback(DEFAULT_TASK_PRIORITY, task);
 }
 
@@ -108,7 +114,7 @@ let flushingQueue = false;
  *
  * React must run inside of event loop to ensure scheduling environment is closer to production.
  */
-export function runTask(task: () => void | Promise<void>) {
+function runTask(task: () => void | Promise<void>) {
   if (flushingQueue) {
     throw new Error(
       'Nested `runTask` calls are not allowed. If you want to schedule a task from inside another task, use `scheduleTask` instead.',
@@ -120,17 +126,26 @@ export function runTask(task: () => void | Promise<void>) {
 }
 
 /*
- * Simmulates running a task on the UI thread and forces side effect to drain the event queue, dispatching events to JavaScript.
+ * Simmulates running a task on the UI thread and forces side effect to drain the event queue, scheduling events to be dispatched to JavaScript.
  */
-export function runOnUIThread(task: () => void) {
+function runOnUIThread(task: () => void) {
   task();
   NativeFantom.flushEventQueue();
+}
+
+/*
+ * Runs a side effect to drain the event queue and dispatches events to JavaScript.
+ * Useful to flash out all tasks.
+ */
+function flushAllNativeEvents() {
+  NativeFantom.flushEventQueue();
+  runWorkLoop();
 }
 
 /**
  * Runs the event loop until all tasks are executed.
  */
-export function runWorkLoop(): void {
+function runWorkLoop(): void {
   if (flushingQueue) {
     throw new Error(
       'Cannot start the work loop because it is already running. If you want to schedule a task from inside another task, use `scheduleTask` instead.',
@@ -147,17 +162,17 @@ export function runWorkLoop(): void {
 
 // TODO: Add option to define surface props and pass it to startSurface
 // Surfacep rops: concurrentRoot, surfaceWidth, surfaceHeight, layoutDirection, pointScaleFactor.
-export function createRoot(rootConfig?: RootConfig): Root {
+function createRoot(rootConfig?: RootConfig): Root {
   return new Root(rootConfig);
 }
 
-export function dispatchNativeEvent(
+function dispatchNativeEvent(
   node: ReactNativeElement,
   type: string,
   payload?: {[key: string]: mixed},
   options?: {category?: NativeEventCategory, isUnique?: boolean},
 ) {
-  const shadowNode = getShadowNode(node);
+  const shadowNode = getNativeNodeReference(node);
   NativeFantom.dispatchNativeEvent(
     shadowNode,
     type,
@@ -165,6 +180,14 @@ export function dispatchNativeEvent(
     options?.category,
     options?.isUnique,
   );
+}
+
+function scrollTo(
+  node: ReactNativeElement,
+  options: {x: number, y: number, zoomScale?: number},
+) {
+  const shadowNode = getNativeNodeReference(node);
+  NativeFantom.scrollTo(shadowNode, options);
 }
 
 export const unstable_benchmark = Benchmark;
@@ -248,3 +271,24 @@ if (typeof global.EventTarget === 'undefined') {
     'The global Event class is already defined. If this API is already defined by React Native, you might want to remove this logic.',
   );
 }
+
+function saveJSMemoryHeapSnapshot(filePath: string): void {
+  if (getConstants().isRunningFromCI) {
+    throw new Error('Unexpected call to `saveJSMemoryHeapSnapshot` from CI');
+  }
+
+  NativeFantom.saveJSMemoryHeapSnapshot(filePath);
+}
+
+export default {
+  scheduleTask,
+  runTask,
+  runOnUIThread,
+  runWorkLoop,
+  createRoot,
+  dispatchNativeEvent,
+  flushAllNativeEvents,
+  unstable_benchmark: Benchmark,
+  scrollTo,
+  saveJSMemoryHeapSnapshot,
+};

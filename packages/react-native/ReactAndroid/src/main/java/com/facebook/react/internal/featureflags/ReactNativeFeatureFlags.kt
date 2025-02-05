@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<82b69f7d6a2b7155fadbc47832bcf032>>
+ * @generated SignedSource<<a73d250c74505693246cd3309ef1d08a>>
  */
 
 /**
@@ -35,12 +35,6 @@ public object ReactNativeFeatureFlags {
   public fun commonTestFlag(): Boolean = accessor.commonTestFlag()
 
   /**
-   * Do not wait for a main-thread dispatch to complete init to start executing work on the JS thread on Android
-   */
-  @JvmStatic
-  public fun completeReactInstanceCreationOnBgThreadOnAndroid(): Boolean = accessor.completeReactInstanceCreationOnBgThreadOnAndroid()
-
-  /**
    * Prevent FabricMountingManager from reordering mountitems, which may lead to invalid state on the UI thread
    */
   @JvmStatic
@@ -63,12 +57,6 @@ public object ReactNativeFeatureFlags {
    */
   @JvmStatic
   public fun enableCppPropsIteratorSetter(): Boolean = accessor.enableCppPropsIteratorSetter()
-
-  /**
-   * Deletes views that were pre-allocated but never mounted on the screen.
-   */
-  @JvmStatic
-  public fun enableDeletionOfUnmountedViews(): Boolean = accessor.enableDeletionOfUnmountedViews()
 
   /**
    * Feature flag to configure eager attachment of the root view/initialisation of the JS code.
@@ -215,10 +203,10 @@ public object ReactNativeFeatureFlags {
   public fun fuseboxEnabledRelease(): Boolean = accessor.fuseboxEnabledRelease()
 
   /**
-   * Construct modules that requires eager init on the dedicate native modules thread
+   * Enable network inspection support in the React Native DevTools CDP backend. This flag is global and should not be changed across React Host lifetimes.
    */
   @JvmStatic
-  public fun initEagerTurboModulesOnNativeModulesQueueAndroid(): Boolean = accessor.initEagerTurboModulesOnNativeModulesQueueAndroid()
+  public fun fuseboxNetworkInspectionEnabled(): Boolean = accessor.fuseboxNetworkInspectionEnabled()
 
   /**
    * Only enqueue Choreographer calls if there is an ongoing animation, instead of enqueueing every frame.
@@ -257,22 +245,10 @@ public object ReactNativeFeatureFlags {
   public fun useFabricInterop(): Boolean = accessor.useFabricInterop()
 
   /**
-   * Invoke callbacks immediately on the ReactInstance rather than going through a background thread for synchronization
-   */
-  @JvmStatic
-  public fun useImmediateExecutorInAndroidBridgeless(): Boolean = accessor.useImmediateExecutorInAndroidBridgeless()
-
-  /**
    * When enabled, the native view configs are used in bridgeless mode.
    */
   @JvmStatic
   public fun useNativeViewConfigsInBridgelessMode(): Boolean = accessor.useNativeViewConfigsInBridgelessMode()
-
-  /**
-   * Moves more of the work in view preallocation to the main thread to free up JS thread.
-   */
-  @JvmStatic
-  public fun useOptimisedViewPreallocationOnAndroid(): Boolean = accessor.useOptimisedViewPreallocationOnAndroid()
 
   /**
    * Uses an optimized mechanism for event batching on Android that does not need to wait for a Choreographer frame callback.

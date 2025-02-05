@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<3aadd0d890f3dac9fee5bc465d759203>>
+ * @generated SignedSource<<931f83bf669c9ed8490e5895df26dfb0>>
  */
 
 /**
@@ -39,10 +39,6 @@ class NativeReactNativeFeatureFlags
 
   bool commonTestFlagWithoutNativeImplementation(jsi::Runtime& runtime);
 
-  bool completeReactInstanceCreationOnBgThreadOnAndroid(jsi::Runtime& runtime);
-
-  bool disableEventLoopOnBridgeless(jsi::Runtime& runtime);
-
   bool disableMountItemReorderingAndroid(jsi::Runtime& runtime);
 
   bool enableAccumulatedUpdatesInRawPropsAndroid(jsi::Runtime& runtime);
@@ -50,8 +46,6 @@ class NativeReactNativeFeatureFlags
   bool enableBridgelessArchitecture(jsi::Runtime& runtime);
 
   bool enableCppPropsIteratorSetter(jsi::Runtime& runtime);
-
-  bool enableDeletionOfUnmountedViews(jsi::Runtime& runtime);
 
   bool enableEagerRootViewAttachment(jsi::Runtime& runtime);
 
@@ -101,7 +95,7 @@ class NativeReactNativeFeatureFlags
 
   bool fuseboxEnabledRelease(jsi::Runtime& runtime);
 
-  bool initEagerTurboModulesOnNativeModulesQueueAndroid(jsi::Runtime& runtime);
+  bool fuseboxNetworkInspectionEnabled(jsi::Runtime& runtime);
 
   bool lazyAnimationCallbacks(jsi::Runtime& runtime);
 
@@ -115,11 +109,7 @@ class NativeReactNativeFeatureFlags
 
   bool useFabricInterop(jsi::Runtime& runtime);
 
-  bool useImmediateExecutorInAndroidBridgeless(jsi::Runtime& runtime);
-
   bool useNativeViewConfigsInBridgelessMode(jsi::Runtime& runtime);
-
-  bool useOptimisedViewPreallocationOnAndroid(jsi::Runtime& runtime);
 
   bool useOptimizedEventBatchingOnAndroid(jsi::Runtime& runtime);
 

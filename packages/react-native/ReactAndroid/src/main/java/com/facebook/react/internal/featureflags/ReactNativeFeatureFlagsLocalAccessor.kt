@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<c74fd40b5988929440b157ea5437d65b>>
+ * @generated SignedSource<<7fde7cbd79c60ae151f7c4585363f654>>
  */
 
 /**
@@ -19,18 +19,16 @@
 
 package com.facebook.react.internal.featureflags
 
-public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAccessor {
+internal class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAccessor {
   private var currentProvider: ReactNativeFeatureFlagsProvider = ReactNativeFeatureFlagsDefaults()
 
   private val accessedFeatureFlags = mutableSetOf<String>()
 
   private var commonTestFlagCache: Boolean? = null
-  private var completeReactInstanceCreationOnBgThreadOnAndroidCache: Boolean? = null
   private var disableMountItemReorderingAndroidCache: Boolean? = null
   private var enableAccumulatedUpdatesInRawPropsAndroidCache: Boolean? = null
   private var enableBridgelessArchitectureCache: Boolean? = null
   private var enableCppPropsIteratorSetterCache: Boolean? = null
-  private var enableDeletionOfUnmountedViewsCache: Boolean? = null
   private var enableEagerRootViewAttachmentCache: Boolean? = null
   private var enableEventEmitterRetentionDuringGesturesOnAndroidCache: Boolean? = null
   private var enableFabricLogsCache: Boolean? = null
@@ -55,16 +53,14 @@ public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAcces
   private var fixMappingOfEventPrioritiesBetweenFabricAndReactCache: Boolean? = null
   private var fixMountingCoordinatorReportedPendingTransactionsOnAndroidCache: Boolean? = null
   private var fuseboxEnabledReleaseCache: Boolean? = null
-  private var initEagerTurboModulesOnNativeModulesQueueAndroidCache: Boolean? = null
+  private var fuseboxNetworkInspectionEnabledCache: Boolean? = null
   private var lazyAnimationCallbacksCache: Boolean? = null
   private var loadVectorDrawablesOnImagesCache: Boolean? = null
   private var traceTurboModulePromiseRejectionsOnAndroidCache: Boolean? = null
   private var useAlwaysAvailableJSErrorHandlingCache: Boolean? = null
   private var useEditTextStockAndroidFocusBehaviorCache: Boolean? = null
   private var useFabricInteropCache: Boolean? = null
-  private var useImmediateExecutorInAndroidBridgelessCache: Boolean? = null
   private var useNativeViewConfigsInBridgelessModeCache: Boolean? = null
-  private var useOptimisedViewPreallocationOnAndroidCache: Boolean? = null
   private var useOptimizedEventBatchingOnAndroidCache: Boolean? = null
   private var useRawPropsJsiValueCache: Boolean? = null
   private var useRuntimeShadowNodeReferenceUpdateCache: Boolean? = null
@@ -77,16 +73,6 @@ public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAcces
       cached = currentProvider.commonTestFlag()
       accessedFeatureFlags.add("commonTestFlag")
       commonTestFlagCache = cached
-    }
-    return cached
-  }
-
-  override fun completeReactInstanceCreationOnBgThreadOnAndroid(): Boolean {
-    var cached = completeReactInstanceCreationOnBgThreadOnAndroidCache
-    if (cached == null) {
-      cached = currentProvider.completeReactInstanceCreationOnBgThreadOnAndroid()
-      accessedFeatureFlags.add("completeReactInstanceCreationOnBgThreadOnAndroid")
-      completeReactInstanceCreationOnBgThreadOnAndroidCache = cached
     }
     return cached
   }
@@ -127,16 +113,6 @@ public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAcces
       cached = currentProvider.enableCppPropsIteratorSetter()
       accessedFeatureFlags.add("enableCppPropsIteratorSetter")
       enableCppPropsIteratorSetterCache = cached
-    }
-    return cached
-  }
-
-  override fun enableDeletionOfUnmountedViews(): Boolean {
-    var cached = enableDeletionOfUnmountedViewsCache
-    if (cached == null) {
-      cached = currentProvider.enableDeletionOfUnmountedViews()
-      accessedFeatureFlags.add("enableDeletionOfUnmountedViews")
-      enableDeletionOfUnmountedViewsCache = cached
     }
     return cached
   }
@@ -381,12 +357,12 @@ public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAcces
     return cached
   }
 
-  override fun initEagerTurboModulesOnNativeModulesQueueAndroid(): Boolean {
-    var cached = initEagerTurboModulesOnNativeModulesQueueAndroidCache
+  override fun fuseboxNetworkInspectionEnabled(): Boolean {
+    var cached = fuseboxNetworkInspectionEnabledCache
     if (cached == null) {
-      cached = currentProvider.initEagerTurboModulesOnNativeModulesQueueAndroid()
-      accessedFeatureFlags.add("initEagerTurboModulesOnNativeModulesQueueAndroid")
-      initEagerTurboModulesOnNativeModulesQueueAndroidCache = cached
+      cached = currentProvider.fuseboxNetworkInspectionEnabled()
+      accessedFeatureFlags.add("fuseboxNetworkInspectionEnabled")
+      fuseboxNetworkInspectionEnabledCache = cached
     }
     return cached
   }
@@ -451,32 +427,12 @@ public class ReactNativeFeatureFlagsLocalAccessor : ReactNativeFeatureFlagsAcces
     return cached
   }
 
-  override fun useImmediateExecutorInAndroidBridgeless(): Boolean {
-    var cached = useImmediateExecutorInAndroidBridgelessCache
-    if (cached == null) {
-      cached = currentProvider.useImmediateExecutorInAndroidBridgeless()
-      accessedFeatureFlags.add("useImmediateExecutorInAndroidBridgeless")
-      useImmediateExecutorInAndroidBridgelessCache = cached
-    }
-    return cached
-  }
-
   override fun useNativeViewConfigsInBridgelessMode(): Boolean {
     var cached = useNativeViewConfigsInBridgelessModeCache
     if (cached == null) {
       cached = currentProvider.useNativeViewConfigsInBridgelessMode()
       accessedFeatureFlags.add("useNativeViewConfigsInBridgelessMode")
       useNativeViewConfigsInBridgelessModeCache = cached
-    }
-    return cached
-  }
-
-  override fun useOptimisedViewPreallocationOnAndroid(): Boolean {
-    var cached = useOptimisedViewPreallocationOnAndroidCache
-    if (cached == null) {
-      cached = currentProvider.useOptimisedViewPreallocationOnAndroid()
-      accessedFeatureFlags.add("useOptimisedViewPreallocationOnAndroid")
-      useOptimisedViewPreallocationOnAndroidCache = cached
     }
     return cached
   }

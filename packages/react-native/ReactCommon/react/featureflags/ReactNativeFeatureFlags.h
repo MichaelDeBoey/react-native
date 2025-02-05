@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<fd9bd691bde2694db1c0401930e275b3>>
+ * @generated SignedSource<<231b8c29c1bfcd58603dd0faef78730a>>
  */
 
 /**
@@ -45,11 +45,6 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool commonTestFlag();
 
   /**
-   * Do not wait for a main-thread dispatch to complete init to start executing work on the JS thread on Android
-   */
-  RN_EXPORT static bool completeReactInstanceCreationOnBgThreadOnAndroid();
-
-  /**
    * Prevent FabricMountingManager from reordering mountitems, which may lead to invalid state on the UI thread
    */
   RN_EXPORT static bool disableMountItemReorderingAndroid();
@@ -68,11 +63,6 @@ class ReactNativeFeatureFlags {
    * Enable prop iterator setter-style construction of Props in C++ (this flag is not used in Java).
    */
   RN_EXPORT static bool enableCppPropsIteratorSetter();
-
-  /**
-   * Deletes views that were pre-allocated but never mounted on the screen.
-   */
-  RN_EXPORT static bool enableDeletionOfUnmountedViews();
 
   /**
    * Feature flag to configure eager attachment of the root view/initialisation of the JS code.
@@ -195,9 +185,9 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool fuseboxEnabledRelease();
 
   /**
-   * Construct modules that requires eager init on the dedicate native modules thread
+   * Enable network inspection support in the React Native DevTools CDP backend. This flag is global and should not be changed across React Host lifetimes.
    */
-  RN_EXPORT static bool initEagerTurboModulesOnNativeModulesQueueAndroid();
+  RN_EXPORT static bool fuseboxNetworkInspectionEnabled();
 
   /**
    * Only enqueue Choreographer calls if there is an ongoing animation, instead of enqueueing every frame.
@@ -230,19 +220,9 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool useFabricInterop();
 
   /**
-   * Invoke callbacks immediately on the ReactInstance rather than going through a background thread for synchronization
-   */
-  RN_EXPORT static bool useImmediateExecutorInAndroidBridgeless();
-
-  /**
    * When enabled, the native view configs are used in bridgeless mode.
    */
   RN_EXPORT static bool useNativeViewConfigsInBridgelessMode();
-
-  /**
-   * Moves more of the work in view preallocation to the main thread to free up JS thread.
-   */
-  RN_EXPORT static bool useOptimisedViewPreallocationOnAndroid();
 
   /**
    * Uses an optimized mechanism for event batching on Android that does not need to wait for a Choreographer frame callback.

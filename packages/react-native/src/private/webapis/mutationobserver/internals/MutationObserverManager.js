@@ -25,11 +25,9 @@ import type MutationObserver, {
 import type MutationRecord from '../MutationRecord';
 
 import * as Systrace from '../../../../../Libraries/Performance/Systrace';
+import {getPublicInstanceFromInternalInstanceHandle} from '../../../../../Libraries/ReactNative/RendererProxy';
 import warnOnce from '../../../../../Libraries/Utilities/warnOnce';
-import {
-  getPublicInstanceFromInternalInstanceHandle,
-  getShadowNode,
-} from '../../dom/nodes/ReadOnlyNode';
+import {getNativeNodeReference} from '../../dom/nodes/internals/NodeInternals';
 import {createMutationRecord} from '../MutationRecord';
 import NativeMutationObserver from '../specs/NativeMutationObserver';
 
@@ -47,7 +45,7 @@ const registeredMutationObservers: Map<
 // needs to be kept here because React removes the link when unmounting.
 const targetToShadowNodeMap: WeakMap<
   ReactNativeElement,
-  ReturnType<typeof getShadowNode>,
+  ReturnType<typeof getNativeNodeReference>,
 > = new WeakMap();
 
 /**
@@ -107,7 +105,7 @@ export function observe({
     return false;
   }
 
-  const targetShadowNode = getShadowNode(target);
+  const targetShadowNode = getNativeNodeReference(target);
   if (targetShadowNode == null) {
     // The target is disconnected. We can't observe it anymore.
     return false;

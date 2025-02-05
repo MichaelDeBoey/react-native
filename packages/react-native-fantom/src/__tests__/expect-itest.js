@@ -111,6 +111,38 @@ describe('expect', () => {
     }).toThrow();
   });
 
+  test('toStrictEqual', () => {
+    class LaCroix {
+      flavor: string;
+      constructor(flavor: string) {
+        this.flavor = flavor;
+      }
+    }
+
+    expect({a: undefined, b: 2}).not.toStrictEqual({b: 2});
+    expect([2, undefined]).not.toStrictEqual([2]);
+    expect([2]).not.toStrictEqual([2, undefined]);
+    // This is part of spec https://jestjs.io/docs/expect#tostrictequalvalue
+    // eslint-disable-next-line no-sparse-arrays
+    expect([, 2]).not.toStrictEqual([undefined, 2]);
+    expect(new LaCroix('lemon')).not.toStrictEqual({flavor: 'lemon'});
+
+    expect({a: 1}).toStrictEqual({a: 1});
+    expect([2, undefined]).toStrictEqual([2, undefined]);
+    // This is part of spec https://jestjs.io/docs/expect#tostrictequalvalue
+    // eslint-disable-next-line no-sparse-arrays
+    expect([, 1]).toStrictEqual([, 1]);
+    expect(new LaCroix('lemon')).toStrictEqual(new LaCroix('lemon'));
+
+    expect(() => {
+      expect(new LaCroix('lemon')).toStrictEqual({flavor: 'lemon'});
+    }).toThrow();
+
+    expect(() => {
+      expect(new LaCroix('lemon')).not.toStrictEqual(new LaCroix('lemon'));
+    }).toThrow();
+  });
+
   test('toBeInstanceOf', () => {
     class Class {}
 
@@ -148,69 +180,142 @@ describe('expect', () => {
     }).toThrow();
   });
 
-  test('toHaveBeenCalled', () => {
-    const fn = jest.fn();
-
-    expect(fn).not.toHaveBeenCalled();
-
-    expect(() => {
-      expect(fn).toHaveBeenCalled();
-    }).toThrow();
-
-    fn();
-
-    expect(fn).toHaveBeenCalled();
+  test('toBeDefined', () => {
+    expect(null).toBeDefined();
+    expect(false).toBeDefined();
+    expect('value').toBeDefined();
+    expect(undefined).not.toBeDefined();
 
     expect(() => {
-      expect(fn).not.toHaveBeenCalled();
-    }).toThrow();
-
-    // Passing functions that aren't mocks should always fail
-    expect(() => {
-      expect(() => {}).toHaveBeenCalled();
+      expect({}).not.toBeDefined();
     }).toThrow();
 
     expect(() => {
-      expect(() => {}).not.toHaveBeenCalled();
+      expect(undefined).toBeDefined();
     }).toThrow();
   });
 
-  test('toHaveBeenCalledTimes', () => {
-    const fn = jest.fn();
-
-    expect(fn).toHaveBeenCalledTimes(0);
-    expect(fn).not.toHaveBeenCalledTimes(1);
+  test('toBeUndefined', () => {
+    expect(undefined).toBeUndefined();
+    expect(null).not.toBeUndefined();
+    expect(false).not.toBeUndefined();
+    expect('value').not.toBeUndefined();
 
     expect(() => {
-      expect(fn).not.toHaveBeenCalledTimes(0);
+      expect(undefined).not.toBeUndefined();
     }).toThrow();
 
     expect(() => {
-      expect(fn).toHaveBeenCalledTimes(1);
-    }).toThrow();
-
-    fn();
-
-    expect(fn).not.toHaveBeenCalledTimes(0);
-    expect(fn).toHaveBeenCalledTimes(1);
-
-    expect(() => {
-      expect(fn).toHaveBeenCalledTimes(0);
-    }).toThrow();
-
-    expect(() => {
-      expect(fn).not.toHaveBeenCalledTimes(1);
-    }).toThrow();
-
-    // Passing functions that aren't mocks should always fail
-    expect(() => {
-      expect(() => {}).toHaveBeenCalledTimes(0);
-    }).toThrow();
-
-    expect(() => {
-      expect(() => {}).not.toHaveBeenCalledTimes(1);
+      expect({}).toBeUndefined();
     }).toThrow();
   });
+
+  test('toBeFalsy', () => {
+    expect(false).toBeFalsy();
+    expect(0).toBeFalsy();
+    expect('').toBeFalsy();
+    expect(null).toBeFalsy();
+    expect(undefined).toBeFalsy();
+    expect(NaN).toBeFalsy();
+    expect([]).not.toBeFalsy();
+    expect(['']).not.toBeFalsy();
+
+    expect(() => {
+      expect(true).toBeFalsy();
+    }).toThrow();
+
+    expect(() => {
+      expect(false).not.toBeFalsy();
+    }).toThrow();
+  });
+
+  test('toBeTruthy', () => {
+    expect(true).toBeTruthy();
+    expect([]).toBeTruthy();
+    expect('a').toBeTruthy();
+    expect(false).not.toBeTruthy();
+    expect(0).not.toBeTruthy();
+    expect('').not.toBeTruthy();
+    expect(null).not.toBeTruthy();
+    expect(undefined).not.toBeTruthy();
+    expect(NaN).not.toBeTruthy();
+
+    expect(() => {
+      expect(false).toBeTruthy();
+    }).toThrow();
+
+    expect(() => {
+      expect(true).not.toBeTruthy();
+    }).toThrow();
+  });
+
+  ['toBeCalled', 'toHaveBeenCalled'].map(toHaveBeenCalledAlias =>
+    test(toHaveBeenCalledAlias, () => {
+      const fn = jest.fn();
+
+      expect(fn).not[toHaveBeenCalledAlias]();
+
+      expect(() => {
+        expect(fn)[toHaveBeenCalledAlias]();
+      }).toThrow();
+
+      fn();
+
+      expect(fn)[toHaveBeenCalledAlias]();
+
+      expect(() => {
+        expect(fn).not[toHaveBeenCalledAlias]();
+      }).toThrow();
+
+      // Passing functions that aren't mocks should always fail
+      expect(() => {
+        expect(() => {})[toHaveBeenCalledAlias]();
+      }).toThrow();
+
+      expect(() => {
+        expect(() => {}).not[toHaveBeenCalledAlias]();
+      }).toThrow();
+    }),
+  );
+
+  ['toBeCalledTimes', 'toHaveBeenCalledTimes'].map(toHaveBeenCalledTimesAlias =>
+    test(toHaveBeenCalledTimesAlias, () => {
+      const fn = jest.fn();
+
+      expect(fn)[toHaveBeenCalledTimesAlias](0);
+      expect(fn).not[toHaveBeenCalledTimesAlias](1);
+
+      expect(() => {
+        expect(fn).not[toHaveBeenCalledTimesAlias](0);
+      }).toThrow();
+
+      expect(() => {
+        expect(fn)[toHaveBeenCalledTimesAlias](1);
+      }).toThrow();
+
+      fn();
+
+      expect(fn).not[toHaveBeenCalledTimesAlias](0);
+      expect(fn)[toHaveBeenCalledTimesAlias](1);
+
+      expect(() => {
+        expect(fn)[toHaveBeenCalledTimesAlias](0);
+      }).toThrow();
+
+      expect(() => {
+        expect(fn).not[toHaveBeenCalledTimesAlias](1);
+      }).toThrow();
+
+      // Passing functions that aren't mocks should always fail
+      expect(() => {
+        expect(() => {})[toHaveBeenCalledTimesAlias](0);
+      }).toThrow();
+
+      expect(() => {
+        expect(() => {}).not[toHaveBeenCalledTimesAlias](1);
+      }).toThrow();
+    }),
+  );
 
   describe('jest.fn()', () => {
     it('tracks execution of functions without implementations', () => {

@@ -36,15 +36,17 @@ class PerformanceTracer {
   bool startTracing();
 
   /**
-   * End tracing, and output chunked CDP trace events using the given
-   * callback.
-   *
-   * Returns `false` if tracing was not started.
+   * Mark trace session as stopped. Returns `false` if wasn't tracing.
    */
-  bool stopTracingAndCollectEvents(
-      const std::function<void(const folly::dynamic& eventsChunk)>&
-          resultCallback);
+  bool stopTracing();
 
+  /**
+   * Flush out buffered CDP Trace Events using the given callback.
+   */
+  void collectEvents(
+      const std::function<void(const folly::dynamic& eventsChunk)>&
+          resultCallback,
+      uint16_t chunkSize);
   /**
    * Record a `Performance.mark()` event - a labelled timestamp. If not
    * currently tracing, this is a no-op.
@@ -74,7 +76,7 @@ class PerformanceTracer {
   folly::dynamic serializeTraceEvent(TraceEvent event) const;
 
   bool tracing_{false};
-  std::unordered_map<std::string, uint64_t> customTrackIdMap_;
+  uint32_t performanceMeasureCount_{0};
   std::vector<TraceEvent> buffer_;
   std::mutex mutex_;
 };

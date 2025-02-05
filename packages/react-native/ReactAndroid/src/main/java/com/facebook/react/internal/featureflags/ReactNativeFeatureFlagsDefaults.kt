@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<91864e51f03045343d7f908c87a85901>>
+ * @generated SignedSource<<115a70b8b6854f14841deb0d98e43902>>
  */
 
 /**
@@ -25,8 +25,6 @@ public open class ReactNativeFeatureFlagsDefaults : ReactNativeFeatureFlagsProvi
 
   override fun commonTestFlag(): Boolean = false
 
-  override fun completeReactInstanceCreationOnBgThreadOnAndroid(): Boolean = true
-
   override fun disableMountItemReorderingAndroid(): Boolean = false
 
   override fun enableAccumulatedUpdatesInRawPropsAndroid(): Boolean = false
@@ -34,8 +32,6 @@ public open class ReactNativeFeatureFlagsDefaults : ReactNativeFeatureFlagsProvi
   override fun enableBridgelessArchitecture(): Boolean = false
 
   override fun enableCppPropsIteratorSetter(): Boolean = false
-
-  override fun enableDeletionOfUnmountedViews(): Boolean = false
 
   override fun enableEagerRootViewAttachment(): Boolean = false
 
@@ -85,7 +81,7 @@ public open class ReactNativeFeatureFlagsDefaults : ReactNativeFeatureFlagsProvi
 
   override fun fuseboxEnabledRelease(): Boolean = false
 
-  override fun initEagerTurboModulesOnNativeModulesQueueAndroid(): Boolean = true
+  override fun fuseboxNetworkInspectionEnabled(): Boolean = false
 
   override fun lazyAnimationCallbacks(): Boolean = false
 
@@ -99,11 +95,7 @@ public open class ReactNativeFeatureFlagsDefaults : ReactNativeFeatureFlagsProvi
 
   override fun useFabricInterop(): Boolean = false
 
-  override fun useImmediateExecutorInAndroidBridgeless(): Boolean = true
-
   override fun useNativeViewConfigsInBridgelessMode(): Boolean = false
-
-  override fun useOptimisedViewPreallocationOnAndroid(): Boolean = false
 
   override fun useOptimizedEventBatchingOnAndroid(): Boolean = false
 

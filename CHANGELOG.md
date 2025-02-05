@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.78.0-rc.3
+
+### Added
+
+#### iOS specific
+
+- Add the `source` parameter to generate-codegen-artifacts to avoid generating files not needed by libraries. ([98b8f17811](https://github.com/facebook/react-native/commit/98b8f178110472e5fed97de80766c03b0b5e988c) by [@cipolleschi](https://github.com/cipolleschi))
+
+### Fixed
+
+- Add missing `invariant` dependency ([ee8088b615](https://github.com/facebook/react-native/commit/ee8088b6157837c239db47ac5bd3a8603ceefc3c) by [@tido64](https://github.com/tido64))
+- Fix `maxFontSizeMultiplier` prop on `Text` and `TextInput` components in Fabric / New Architecture ([ea49d4d1b01107a5ecbbbd4904f1d935e51d6b32](https://github.com/facebook/react-native/commit/ea49d4d1b01107a5ecbbbd4904f1d935e51d6b32) by [@RickardZrinski](https://github.com/RickardZrinski))
+
+#### Android specific
+
+- Pass the bundle URL protocol when setting up HMR client on Android ([32fe244744](https://github.com/facebook/react-native/commit/32fe24474495f09f985a2c92e11103dd386f5fe3) by [@byCedric](https://github.com/byCedric))
+
+## v0.78.0-rc.2
+
+### Fixed
+
+#### iOS specific
+
+- Load images even when the extension is implicit ([b9f418e9bc](https://github.com/facebook/react-native/commit/b9f418e9bc35372438a34934254db985b7ad1840) by [@cipolleschi](https://github.com/cipolleschi))
+
+
 ## v0.78.0-rc.1
 
 ### Changed
@@ -1327,6 +1353,21 @@ created on the mqt_native thread. ([c4a6bbc8fd](https://github.com/facebook/reac
 - **style:** Removed Legacy iOS 10 code messing with border radius ([9204e44ef5](https://github.com/facebook/react-native/commit/9204e44ef5038ed9190a7e5362a7ea3c0793b361) by [@jorge-cab](https://github.com/jorge-cab))
 - **turbomodule:** Fixed race condition in native module invalidation. ([b7812a8b6c](https://github.com/facebook/react-native/commit/b7812a8b6c3afbeacaad94779cd010bcc5440785) by [@dmytrorykun](https://github.com/dmytrorykun))
 - **xcode:** Do not use temporary node when creating the .xcode.env.local ([8408b8bc96](https://github.com/facebook/react-native/commit/8408b8bc96db15e265ca65fce7875ee65dcfdcec) by [@cipolleschi](https://github.com/cipolleschi))
+
+## v0.74.7
+
+### Fixed
+
+#### Android specific
+
+- Fix #41226 by suppressing path adjustment when not actually drawing a border ([8501b6396b](https://github.com/facebook/react-native/commit/8501b6396b0a4fd7a9bd2add2b3c8b9c755c27ae) by [@knappam](https://github.com/knappam))
+- RGNP - Remove unnecessary dependency on `gradle-tooling-api-builders` - serviceOf failure ([b6bdecd309](https://github.com/facebook/react-native/commit/b6bdecd309bf74cfa80b71204d5266667cb3f843) by [@cortinico](https://github.com/cortinico))
+
+#### iOS specific
+
+- Fix iOS crash occurring when navigating to a new app screen with a displaying modal ([52888c0c1e](https://github.com/facebook/react-native/commit/52888c0c1e722a799f233c2f502e01b9dd4a7174) by Zhi Zhou)
+- Fix ruby for CI ([1c80702e95](https://github.com/facebook/react-native/commit/1c80702e95a6bcf422f5448b4578d71e8e78071b) by [@cipolleschi](https://github.com/cipolleschi))
+- Fixes animations strict weak ordering sorted check failed ([60889e170c](https://github.com/facebook/react-native/commit/60889e170ca3f6187e15719a3d85da0bc7e974ff) by [@zhongwuzw](https://github.com/zhongwuzw))
 
 ## v0.74.6
 

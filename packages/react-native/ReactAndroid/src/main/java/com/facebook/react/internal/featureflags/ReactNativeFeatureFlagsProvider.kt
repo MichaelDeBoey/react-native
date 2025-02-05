@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<f788466279ae3072eb6dcf0c69125360>>
+ * @generated SignedSource<<bf4fee68309fdc7f9270f44ab5535c14>>
  */
 
 /**
@@ -25,8 +25,6 @@ import com.facebook.proguard.annotations.DoNotStrip
 public interface ReactNativeFeatureFlagsProvider {
   @DoNotStrip public fun commonTestFlag(): Boolean
 
-  @DoNotStrip public fun completeReactInstanceCreationOnBgThreadOnAndroid(): Boolean
-
   @DoNotStrip public fun disableMountItemReorderingAndroid(): Boolean
 
   @DoNotStrip public fun enableAccumulatedUpdatesInRawPropsAndroid(): Boolean
@@ -34,8 +32,6 @@ public interface ReactNativeFeatureFlagsProvider {
   @DoNotStrip public fun enableBridgelessArchitecture(): Boolean
 
   @DoNotStrip public fun enableCppPropsIteratorSetter(): Boolean
-
-  @DoNotStrip public fun enableDeletionOfUnmountedViews(): Boolean
 
   @DoNotStrip public fun enableEagerRootViewAttachment(): Boolean
 
@@ -85,7 +81,7 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun fuseboxEnabledRelease(): Boolean
 
-  @DoNotStrip public fun initEagerTurboModulesOnNativeModulesQueueAndroid(): Boolean
+  @DoNotStrip public fun fuseboxNetworkInspectionEnabled(): Boolean
 
   @DoNotStrip public fun lazyAnimationCallbacks(): Boolean
 
@@ -99,11 +95,7 @@ public interface ReactNativeFeatureFlagsProvider {
 
   @DoNotStrip public fun useFabricInterop(): Boolean
 
-  @DoNotStrip public fun useImmediateExecutorInAndroidBridgeless(): Boolean
-
   @DoNotStrip public fun useNativeViewConfigsInBridgelessMode(): Boolean
-
-  @DoNotStrip public fun useOptimisedViewPreallocationOnAndroid(): Boolean
 
   @DoNotStrip public fun useOptimizedEventBatchingOnAndroid(): Boolean
 

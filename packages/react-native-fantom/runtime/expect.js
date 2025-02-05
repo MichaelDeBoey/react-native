@@ -89,6 +89,31 @@ class Expect {
     }
   }
 
+  toStrictEqual(expected: mixed): void {
+    let expectedType: mixed =
+      typeof expected === 'object' && expected !== null
+        ? Object.getPrototypeOf(expected)
+        : null;
+    let receivedType: mixed =
+      typeof this.#received === 'object' && this.#received !== null
+        ? Object.getPrototypeOf(this.#received)
+        : null;
+    const pass =
+      deepEqual(this.#received, expected, {strict: true}) &&
+      expectedType === receivedType;
+    if (!this.#isExpectedResult(pass)) {
+      throw new ErrorWithCustomBlame(
+        `Expected${this.#maybeNotLabel()} to strictly equal:\n${
+          diff(expected, this.#received, {
+            contextLines: 1,
+            expand: false,
+            omitAnnotationLines: true,
+          }) ?? 'Failed to compare outputs'
+        }`,
+      ).blameToPreviousFrame();
+    }
+  }
+
   toBe(expected: mixed): void {
     const pass = this.#received === expected;
     if (!this.#isExpectedResult(pass)) {
@@ -117,11 +142,47 @@ class Expect {
     }
   }
 
+  toBeDefined(): void {
+    const pass = this.#received !== undefined;
+    if (!this.#isExpectedResult(pass)) {
+      throw new ErrorWithCustomBlame(
+        `Expected ${String(this.#received)}${this.#maybeNotLabel()} to be defined`,
+      ).blameToPreviousFrame();
+    }
+  }
+
+  toBeUndefined(): void {
+    const pass = this.#received === undefined;
+    if (!this.#isExpectedResult(pass)) {
+      throw new ErrorWithCustomBlame(
+        `Expected ${String(this.#received)}${this.#maybeNotLabel()} to be undefined`,
+      ).blameToPreviousFrame();
+    }
+  }
+
   toBeNull(): void {
     const pass = this.#received == null;
     if (!this.#isExpectedResult(pass)) {
       throw new ErrorWithCustomBlame(
         `Expected ${String(this.#received)}${this.#maybeNotLabel()} to be null`,
+      ).blameToPreviousFrame();
+    }
+  }
+
+  toBeFalsy(): void {
+    const pass = Boolean(this.#received) === false;
+    if (!this.#isExpectedResult(pass)) {
+      throw new ErrorWithCustomBlame(
+        `Expected ${String(this.#received)}${this.#maybeNotLabel()} to be falsy`,
+      ).blameToPreviousFrame();
+    }
+  }
+
+  toBeTruthy(): void {
+    const pass = Boolean(this.#received);
+    if (!this.#isExpectedResult(pass)) {
+      throw new ErrorWithCustomBlame(
+        `Expected ${String(this.#received)}${this.#maybeNotLabel()} to be truthy`,
       ).blameToPreviousFrame();
     }
   }
@@ -166,6 +227,10 @@ class Expect {
     }
   }
 
+  toBeCalled(): void {
+    return this.toHaveBeenCalled();
+  }
+
   toHaveBeenCalled(): void {
     const mock = this.#requireMock();
     const pass = mock.calls.length > 0;
@@ -174,6 +239,10 @@ class Expect {
         `Expected ${String(this.#received)}${this.#maybeNotLabel()} to have been called, but it was${this.#isNot ? '' : "n't"}`,
       ).blameToPreviousFrame();
     }
+  }
+
+  toBeCalledTimes(times: number): void {
+    return this.toHaveBeenCalledTimes(times);
   }
 
   toHaveBeenCalledTimes(times: number): void {

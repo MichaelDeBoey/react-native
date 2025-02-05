@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<32058afdbd4cfbd28a1c21405ae3107d>>
+ * @generated SignedSource<<a13143c2a57e025cd93795bbc3eb4425>>
  */
 
 /**
@@ -54,15 +54,6 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::commonTestFlag();
   }
 
-  bool completeReactInstanceCreationOnBgThreadOnAndroid() override {
-    auto value = values_["completeReactInstanceCreationOnBgThreadOnAndroid"];
-    if (!value.isNull()) {
-      return value.getBool();
-    }
-
-    return ReactNativeFeatureFlagsDefaults::completeReactInstanceCreationOnBgThreadOnAndroid();
-  }
-
   bool disableMountItemReorderingAndroid() override {
     auto value = values_["disableMountItemReorderingAndroid"];
     if (!value.isNull()) {
@@ -97,15 +88,6 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     }
 
     return ReactNativeFeatureFlagsDefaults::enableCppPropsIteratorSetter();
-  }
-
-  bool enableDeletionOfUnmountedViews() override {
-    auto value = values_["enableDeletionOfUnmountedViews"];
-    if (!value.isNull()) {
-      return value.getBool();
-    }
-
-    return ReactNativeFeatureFlagsDefaults::enableDeletionOfUnmountedViews();
   }
 
   bool enableEagerRootViewAttachment() override {
@@ -324,13 +306,13 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::fuseboxEnabledRelease();
   }
 
-  bool initEagerTurboModulesOnNativeModulesQueueAndroid() override {
-    auto value = values_["initEagerTurboModulesOnNativeModulesQueueAndroid"];
+  bool fuseboxNetworkInspectionEnabled() override {
+    auto value = values_["fuseboxNetworkInspectionEnabled"];
     if (!value.isNull()) {
       return value.getBool();
     }
 
-    return ReactNativeFeatureFlagsDefaults::initEagerTurboModulesOnNativeModulesQueueAndroid();
+    return ReactNativeFeatureFlagsDefaults::fuseboxNetworkInspectionEnabled();
   }
 
   bool lazyAnimationCallbacks() override {
@@ -387,15 +369,6 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     return ReactNativeFeatureFlagsDefaults::useFabricInterop();
   }
 
-  bool useImmediateExecutorInAndroidBridgeless() override {
-    auto value = values_["useImmediateExecutorInAndroidBridgeless"];
-    if (!value.isNull()) {
-      return value.getBool();
-    }
-
-    return ReactNativeFeatureFlagsDefaults::useImmediateExecutorInAndroidBridgeless();
-  }
-
   bool useNativeViewConfigsInBridgelessMode() override {
     auto value = values_["useNativeViewConfigsInBridgelessMode"];
     if (!value.isNull()) {
@@ -403,15 +376,6 @@ class ReactNativeFeatureFlagsDynamicProvider : public ReactNativeFeatureFlagsDef
     }
 
     return ReactNativeFeatureFlagsDefaults::useNativeViewConfigsInBridgelessMode();
-  }
-
-  bool useOptimisedViewPreallocationOnAndroid() override {
-    auto value = values_["useOptimisedViewPreallocationOnAndroid"];
-    if (!value.isNull()) {
-      return value.getBool();
-    }
-
-    return ReactNativeFeatureFlagsDefaults::useOptimisedViewPreallocationOnAndroid();
   }
 
   bool useOptimizedEventBatchingOnAndroid() override {

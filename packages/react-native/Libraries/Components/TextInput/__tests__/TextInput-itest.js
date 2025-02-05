@@ -15,7 +15,7 @@ import '../../../Core/InitializeCore.js';
 import ensureInstance from '../../../../src/private/utilities/ensureInstance';
 import ReactNativeElement from '../../../../src/private/webapis/dom/nodes/ReactNativeElement';
 import TextInput from '../TextInput';
-import * as Fantom from '@react-native/fantom';
+import Fantom from '@react-native/fantom';
 import * as React from 'react';
 import {useEffect, useLayoutEffect, useRef} from 'react';
 
@@ -26,6 +26,7 @@ describe('focus view command', () => {
     Fantom.runTask(() => {
       root.render(
         <TextInput
+          nativeID="text-input"
           ref={node => {
             if (node) {
               node.focus();
@@ -35,13 +36,12 @@ describe('focus view command', () => {
       );
     });
 
-    const mountingLogs = root.getMountingLogs();
-
-    expect(mountingLogs.length).toBe(2);
-    expect(mountingLogs[0]).toBe('create view type: `AndroidTextInput`');
-    expect(mountingLogs[1]).toBe(
-      'dispatch command `focus` on component `AndroidTextInput`',
-    );
+    expect(root.takeMountingManagerLogs()).toEqual([
+      'Update {type: "RootView", nativeID: (root)}',
+      'Create {type: "AndroidTextInput", nativeID: "text-input"}',
+      'Insert {type: "AndroidTextInput", parentNativeID: (root), index: 0, nativeID: "text-input"}',
+      'Command {type: "AndroidTextInput", nativeID: "text-input", name: "focus"}',
+    ]);
   });
 
   it('creates view before dispatching view command from useLayoutEffect', () => {
@@ -56,19 +56,18 @@ describe('focus view command', () => {
         textInputRef.current?.focus();
       });
 
-      return <TextInput ref={textInputRef} />;
+      return <TextInput ref={textInputRef} nativeID="text-input" />;
     }
     Fantom.runTask(() => {
       root.render(<Component />);
     });
 
-    const mountingLogs = root.getMountingLogs();
-
-    expect(mountingLogs.length).toBe(2);
-    expect(mountingLogs[0]).toBe('create view type: `AndroidTextInput`');
-    expect(mountingLogs[1]).toBe(
-      'dispatch command `focus` on component `AndroidTextInput`',
-    );
+    expect(root.takeMountingManagerLogs()).toEqual([
+      'Update {type: "RootView", nativeID: (root)}',
+      'Create {type: "AndroidTextInput", nativeID: "text-input"}',
+      'Insert {type: "AndroidTextInput", parentNativeID: (root), index: 0, nativeID: "text-input"}',
+      'Command {type: "AndroidTextInput", nativeID: "text-input", name: "focus"}',
+    ]);
   });
 
   it('creates view before dispatching view command from useEffect', () => {
@@ -83,19 +82,19 @@ describe('focus view command', () => {
         textInputRef.current?.focus();
       });
 
-      return <TextInput ref={textInputRef} />;
+      return <TextInput ref={textInputRef} nativeID="text-input" />;
     }
+
     Fantom.runTask(() => {
       root.render(<Component />);
     });
 
-    const mountingLogs = root.getMountingLogs();
-
-    expect(mountingLogs.length).toBe(2);
-    expect(mountingLogs[0]).toBe('create view type: `AndroidTextInput`');
-    expect(mountingLogs[1]).toBe(
-      'dispatch command `focus` on component `AndroidTextInput`',
-    );
+    expect(root.takeMountingManagerLogs()).toEqual([
+      'Update {type: "RootView", nativeID: (root)}',
+      'Create {type: "AndroidTextInput", nativeID: "text-input"}',
+      'Insert {type: "AndroidTextInput", parentNativeID: (root), index: 0, nativeID: "text-input"}',
+      'Command {type: "AndroidTextInput", nativeID: "text-input", name: "focus"}',
+    ]);
   });
 });
 

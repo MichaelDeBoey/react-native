@@ -70,7 +70,8 @@ if (__DEV__) {
   const reactDevToolsFuseboxGlobalBindingName =
     fuseboxReactDevToolsDispatcher.BINDING_NAME;
 
-  const ReactNativeStyleAttributes = require('../Components/View/ReactNativeStyleAttributes');
+  const ReactNativeStyleAttributes =
+    require('../Components/View/ReactNativeStyleAttributes').default;
   const resolveRNStyle = require('../StyleSheet/flattenStyle');
 
   function handleReactDevToolsSettingsUpdate(settings: Object) {
@@ -131,7 +132,7 @@ if (__DEV__) {
     // TODO(t12832058) This check is broken
     if (!window.document) {
       const AppState = require('../AppState/AppState').default;
-      const getDevServer = require('./Devtools/getDevServer');
+      const getDevServer = require('./Devtools/getDevServer').default;
 
       // Don't steal the DevTools from currently active app.
       // Note: if you add any AppState subscriptions to this file,
@@ -208,7 +209,8 @@ if (__DEV__) {
   );
 
   // 3. Fallback to attempting to connect WS-based RDT frontend
-  const RCTNativeAppEventEmitter = require('../EventEmitter/RCTNativeAppEventEmitter');
+  const RCTNativeAppEventEmitter =
+    require('../EventEmitter/RCTNativeAppEventEmitter').default;
   RCTNativeAppEventEmitter.addListener(
     'RCTDevMenuShown',
     connectToWSBasedReactDevToolsFrontend,
