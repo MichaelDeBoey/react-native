@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<05405c3bb41e2511ac66792eb641db5e>>
+ * @generated SignedSource<<b724dc9b1812a124f4964640b7fca8a1>>
  */
 
 /**
@@ -48,6 +48,10 @@ bool ReactNativeFeatureFlags::disableMainQueueSyncDispatchIOS() {
 
 bool ReactNativeFeatureFlags::disableMountItemReorderingAndroid() {
   return getAccessor().disableMountItemReorderingAndroid();
+}
+
+bool ReactNativeFeatureFlags::disableTextLayoutManagerCacheAndroid() {
+  return getAccessor().disableTextLayoutManagerCacheAndroid();
 }
 
 bool ReactNativeFeatureFlags::enableAccessibilityOrder() {
@@ -232,6 +236,10 @@ bool ReactNativeFeatureFlags::useTurboModuleInterop() {
 
 bool ReactNativeFeatureFlags::useTurboModules() {
   return getAccessor().useTurboModules();
+}
+
+double ReactNativeFeatureFlags::virtualViewPrerenderRatio() {
+  return getAccessor().virtualViewPrerenderRatio();
 }
 
 void ReactNativeFeatureFlags::override(

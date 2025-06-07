@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<f67a9635d8fadd31a82d32f8dac00ba0>>
+ * @generated SignedSource<<7484b716c0cb8d12d307e3b34767e559>>
  */
 
 /**
@@ -65,6 +65,12 @@ public object ReactNativeFeatureFlags {
    */
   @JvmStatic
   public fun disableMountItemReorderingAndroid(): Boolean = accessor.disableMountItemReorderingAndroid()
+
+  /**
+   * Turns off the global measurement cache used by TextLayoutManager on Android.
+   */
+  @JvmStatic
+  public fun disableTextLayoutManagerCacheAndroid(): Boolean = accessor.disableTextLayoutManagerCacheAndroid()
 
   /**
    * When enabled, the accessibilityOrder prop will propagate to native platforms and define the accessibility order.
@@ -341,6 +347,12 @@ public object ReactNativeFeatureFlags {
    */
   @JvmStatic
   public fun useTurboModules(): Boolean = accessor.useTurboModules()
+
+  /**
+   * Initial prerender ratio for VirtualView.
+   */
+  @JvmStatic
+  public fun virtualViewPrerenderRatio(): Double = accessor.virtualViewPrerenderRatio()
 
   /**
    * Overrides the feature flags with the ones provided by the given provider
