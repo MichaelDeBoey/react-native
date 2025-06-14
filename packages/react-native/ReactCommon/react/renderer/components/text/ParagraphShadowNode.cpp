@@ -21,17 +21,16 @@
 
 #include <react/renderer/components/text/ParagraphState.h>
 
-#define assert_valid_size(size, layoutConstraints)                         \
-  react_native_assert(                                                     \
-      !ReactNativeFeatureFlags::avoidCeilingAvailableAndroidTextWidth() || \
-      ((size).width + kDefaultEpsilon >=                                   \
-           (layoutConstraints).minimumSize.width &&                        \
-       (size).width - kDefaultEpsilon <=                                   \
-           (layoutConstraints).maximumSize.width &&                        \
-       (size).height + kDefaultEpsilon >=                                  \
-           (layoutConstraints).minimumSize.height &&                       \
-       (size).height - kDefaultEpsilon <=                                  \
-           (layoutConstraints).maximumSize.height))
+#define assert_valid_size(size, layoutConstraints)  \
+  react_native_assert(                              \
+      (size).width + kDefaultEpsilon >=             \
+          (layoutConstraints).minimumSize.width &&  \
+      (size).width - kDefaultEpsilon <=             \
+          (layoutConstraints).maximumSize.width &&  \
+      (size).height + kDefaultEpsilon >=            \
+          (layoutConstraints).minimumSize.height && \
+      (size).height - kDefaultEpsilon <=            \
+          (layoutConstraints).maximumSize.height)
 
 namespace facebook::react {
 using Content = ParagraphShadowNode::Content;
@@ -58,26 +57,13 @@ ParagraphShadowNode::ParagraphShadowNode(
     const ShadowNode& sourceShadowNode,
     const ShadowNodeFragment& fragment)
     : ConcreteViewShadowNode(sourceShadowNode, fragment) {
-  auto& sourceParagraphShadowNode =
-      static_cast<const ParagraphShadowNode&>(sourceShadowNode);
-  auto& state = getStateData();
-  const auto& sourceContent = sourceParagraphShadowNode.content_;
-
-  if (!fragment.children && !fragment.props &&
-      sourceParagraphShadowNode.getIsLayoutClean() &&
-      (!ReactNativeFeatureFlags::enableFontScaleChangesUpdatingLayout() ||
-       (sourceContent.has_value() &&
-        sourceContent.value()
-                .attributedString.getBaseTextAttributes()
-                .fontSizeMultiplier ==
-            state.attributedString.getBaseTextAttributes()
-                .fontSizeMultiplier))) {
-    // This ParagraphShadowNode was cloned but did not change
-    // in a way that affects its layout. Let's mark it clean
-    // to stop Yoga from traversing it.
-    cleanLayout();
-  }
   initialize();
+}
+
+bool ParagraphShadowNode::shouldNewRevisionDirtyMeasurement(
+    const ShadowNode& /*sourceShadowNode*/,
+    const ShadowNodeFragment& fragment) const {
+  return fragment.props != nullptr;
 }
 
 const Content& ParagraphShadowNode::getContent(

@@ -6,7 +6,6 @@
  */
 
 #include "RuntimeScheduler_Modern.h"
-#include "SchedulerPriorityUtils.h"
 
 #include <ReactCommon/RuntimeExecutorSyncUIThreadUtils.h>
 #include <cxxreact/TraceSection.h>
@@ -15,7 +14,6 @@
 #include <react/renderer/consistency/ScopedShadowTreeRevisionLock.h>
 #include <react/timing/primitives.h>
 #include <react/utils/OnScopeExit.h>
-#include <utility>
 
 namespace facebook::react {
 
@@ -356,8 +354,9 @@ void RuntimeScheduler_Modern::updateRendering() {
 
   // This is the integration of the Event Timing API in the Event Loop.
   // See https://w3c.github.io/event-timing/#sec-modifications-HTML
-  if (eventTimingDelegate_ != nullptr) {
-    eventTimingDelegate_->dispatchPendingEventTimingEntries(
+  const auto eventTimingDelegate = eventTimingDelegate_.load();
+  if (eventTimingDelegate != nullptr) {
+    eventTimingDelegate->dispatchPendingEventTimingEntries(
         surfaceIdsWithPendingRenderingUpdates_);
   }
 

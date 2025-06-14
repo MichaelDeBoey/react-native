@@ -73,6 +73,20 @@ const ALL_GENERATORS = {
   generateViewConfigJs: generateViewConfigJs.generate,
 };
 
+type FilesOutput = Map<string, string>;
+
+type GenerateFunction = (
+  libraryName: string,
+  schema: SchemaType,
+  packageName?: string,
+  assumeNonnull: boolean,
+  headerPrefix?: string,
+) => FilesOutput;
+
+type LibraryGeneratorsFunctions = $ReadOnly<{
+  [string]: Array<GenerateFunction>,
+}>;
+
 type LibraryOptions = $ReadOnly<{
   libraryName: string,
   schema: SchemaType,
@@ -80,6 +94,7 @@ type LibraryOptions = $ReadOnly<{
   packageName?: string, // Some platforms have a notion of package, which should be configurable.
   assumeNonnull: boolean,
   useLocalIncludePaths?: boolean,
+  libraryGenerators?: LibraryGeneratorsFunctions,
 }>;
 
 type SchemasOptions = $ReadOnly<{
@@ -113,7 +128,7 @@ type SchemasConfig = $ReadOnly<{
   test?: boolean,
 }>;
 
-const LIBRARY_GENERATORS = {
+const LIBRARY_GENERATORS: LibraryGeneratorsFunctions = {
   descriptors: [
     generateComponentDescriptorCpp.generate,
     generateComponentDescriptorH.generate,
@@ -231,8 +246,6 @@ function checkOrWriteFiles(
 
 module.exports = {
   allGenerators: ALL_GENERATORS,
-  libraryGenerators: LIBRARY_GENERATORS,
-  schemaGenerators: SCHEMAS_GENERATORS,
 
   generate(
     {
@@ -242,6 +255,7 @@ module.exports = {
       packageName,
       assumeNonnull,
       useLocalIncludePaths,
+      libraryGenerators = LIBRARY_GENERATORS,
     }: LibraryOptions,
     {generators, test}: LibraryConfig,
   ): boolean {
@@ -278,7 +292,7 @@ module.exports = {
     const generatedFiles: Array<CodeGenFile> = [];
 
     for (const name of generators) {
-      for (const generator of LIBRARY_GENERATORS[name]) {
+      for (const generator of libraryGenerators[name]) {
         generator(
           libraryName,
           schema,
@@ -321,7 +335,10 @@ module.exports = {
     }
     return checkOrWriteFiles(generatedFiles, test);
   },
-  generateViewConfig({libraryName, schema}: LibraryOptions): string {
+  generateViewConfig({
+    libraryName,
+    schema,
+  }: Pick<LibraryOptions, 'libraryName' | 'schema'>): string {
     schemaValidator.validate(schema);
 
     const result = generateViewConfigJs

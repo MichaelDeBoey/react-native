@@ -70,16 +70,6 @@ const definitions: FeatureFlagDefinitions = {
       },
       ossReleaseStage: 'none',
     },
-    avoidCeilingAvailableAndroidTextWidth: {
-      defaultValue: true,
-      metadata: {
-        description:
-          'Do not incorrectly ceil the available width of an Android text layout',
-        expectedReleaseValue: true,
-        purpose: 'release',
-      },
-      ossReleaseStage: 'stable',
-    },
     cxxNativeAnimatedEnabled: {
       defaultValue: false,
       metadata: {
@@ -108,6 +98,17 @@ const definitions: FeatureFlagDefinitions = {
         description:
           'Prevent FabricMountingManager from reordering mountItems, which may lead to invalid state on the UI thread',
         expectedReleaseValue: true,
+        purpose: 'experimentation',
+      },
+      ossReleaseStage: 'none',
+    },
+    disableTextLayoutManagerCacheAndroid: {
+      defaultValue: false,
+      metadata: {
+        dateAdded: '2025-05-28',
+        description:
+          'Turns off the global measurement cache used by TextLayoutManager on Android.',
+        expectedReleaseValue: false,
         purpose: 'experimentation',
       },
       ossReleaseStage: 'none',
@@ -438,6 +439,16 @@ const definitions: FeatureFlagDefinitions = {
       },
       ossReleaseStage: 'none',
     },
+    enableVirtualViewDebugFeatures: {
+      defaultValue: false,
+      metadata: {
+        description:
+          'Enables VirtualView debug features such as logging and overlays.',
+        expectedReleaseValue: false,
+        purpose: 'operational',
+      },
+      ossReleaseStage: 'none',
+    },
     fixMappingOfEventPrioritiesBetweenFabricAndReact: {
       defaultValue: false,
       metadata: {
@@ -470,16 +481,6 @@ const definitions: FeatureFlagDefinitions = {
       },
       ossReleaseStage: 'none',
     },
-    incorporateMaxLinesDuringAndroidLayout: {
-      defaultValue: true,
-      metadata: {
-        description:
-          'Set maxLines and ellipsization during Android layout creation',
-        expectedReleaseValue: true,
-        purpose: 'release',
-      },
-      ossReleaseStage: 'stable',
-    },
     traceTurboModulePromiseRejectionsOnAndroid: {
       defaultValue: false,
       metadata: {
@@ -510,16 +511,6 @@ const definitions: FeatureFlagDefinitions = {
         purpose: 'release',
       },
       ossReleaseStage: 'none',
-    },
-    useAndroidTextLayoutWidthDirectly: {
-      defaultValue: true,
-      metadata: {
-        description:
-          'Trust the width of a text layout we create, instead of re-deriving it from its contents',
-        expectedReleaseValue: true,
-        purpose: 'release',
-      },
-      ossReleaseStage: 'stable',
     },
     useFabricInterop: {
       defaultValue: true,
@@ -596,11 +587,31 @@ const definitions: FeatureFlagDefinitions = {
       },
       ossReleaseStage: 'canary',
     },
+    virtualViewPrerenderRatio: {
+      defaultValue: 5,
+      metadata: {
+        dateAdded: '2025-05-30',
+        description: 'Initial prerender ratio for VirtualView.',
+        expectedReleaseValue: 5,
+        purpose: 'experimentation',
+      },
+      ossReleaseStage: 'none',
+    },
   },
 
   jsOnly: {
     ...testDefinitions.jsOnly,
-
+    alwaysFlattenAnimatedStyles: {
+      defaultValue: false,
+      metadata: {
+        dateAdded: '2025-06-02',
+        description:
+          'Changes `Animated` to always flatten style, fixing a bug with shadowed `AnimatedNode` instances.',
+        expectedReleaseValue: true,
+        purpose: 'experimentation',
+      },
+      ossReleaseStage: 'none',
+    },
     animatedShouldDebounceQueueFlush: {
       defaultValue: false,
       metadata: {
@@ -650,16 +661,6 @@ const definitions: FeatureFlagDefinitions = {
           'Enables access to the host tree in Fabric using DOM-compatible APIs.',
         expectedReleaseValue: true,
         purpose: 'release',
-      },
-      ossReleaseStage: 'none',
-    },
-    enableVirtualViewDebugFeatures: {
-      defaultValue: false,
-      metadata: {
-        description:
-          'Enables VirtualView debug features such as logging and overlays.',
-        expectedReleaseValue: false,
-        purpose: 'operational',
       },
       ossReleaseStage: 'none',
     },

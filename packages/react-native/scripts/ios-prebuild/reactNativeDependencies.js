@@ -8,12 +8,15 @@
  * @format
  */
 
+/*:: import type {BuildFlavor} from './types'; */
+
 const {createLogger} = require('./utils');
 const {execSync} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const stream = require('stream');
 const {promisify} = require('util');
+
 const pipeline = promisify(stream.pipeline);
 
 const dependencyLog = createLogger('ReactNativeDependencies');
@@ -25,7 +28,7 @@ const dependencyLog = createLogger('ReactNativeDependencies');
  */
 async function prepareReactNativeDependenciesArtifactsAsync(
   version /*:string*/,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
 ) /*: Promise<string> */ {
   dependencyLog(`Preparing ReactNativeDependencies...`);
 
@@ -132,7 +135,7 @@ const ReactNativeDependenciesEngineSourceTypes = {
 function checkExistingVersion(
   versionFilePath /*: string */,
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string */,
 ) {
   const resolvedVersion = `${version}-${buildType}`;
@@ -141,20 +144,28 @@ function checkExistingVersion(
     'ReactNativeDependencies.xcframework',
   );
 
-  if (fs.existsSync(versionFilePath) && fs.existsSync(rndepXCFramework)) {
-    const versionFileContent = fs.readFileSync(versionFilePath, 'utf8');
-    if (versionFileContent.trim() === resolvedVersion) {
+  if (fs.existsSync(rndepXCFramework)) {
+    if (fs.existsSync(versionFilePath)) {
+      const versionFileContent = fs.readFileSync(versionFilePath, 'utf8');
+      dependencyLog(`Version found on disk: ${versionFileContent}`);
+      if (versionFileContent.trim() === resolvedVersion) {
+        dependencyLog(
+          `ReactNativeDependencies artifacts already downloaded and up to date: ${artifactsPath}`,
+        );
+        return true;
+      }
+    } else {
       dependencyLog(
-        `ReactNativeDependencies artifacts already downloaded and up to date: ${artifactsPath}`,
+        `React Native Dependencies found on disk at: ${artifactsPath}.\nNo version file has been found. We are going to use it anyway, but there might be some unexpected behaviors.`,
       );
-      return true;
     }
+  } else {
+    dependencyLog('React Native Dependencies not found on disk');
   }
+
   // If the version file does not exist or the version does not match, delete the artifacts folder
   fs.rmSync(artifactsPath, {recursive: true, force: true});
-  dependencyLog(
-    `ReactNativeDependencies artifacts folder already exists, but version does not match. Deleting: ${artifactsPath}`,
-  );
+
   // Lets create the version.txt file
   fs.mkdirSync(artifactsPath, {recursive: true});
   fs.writeFileSync(versionFilePath, resolvedVersion, 'utf8');
@@ -166,18 +177,18 @@ function checkExistingVersion(
 
 function getTarballUrl(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
 ) /*: string */ {
   const mavenRepoUrl = 'https://repo1.maven.org/maven2';
   const namespace = 'com/facebook/react';
-  return `${mavenRepoUrl}/${namespace}/react-native-artifacts/${version}/react-native-artifacts-${version}-reactnative-dependencies-${buildType}.tar.gz`;
+  return `${mavenRepoUrl}/${namespace}/react-native-artifacts/${version}/react-native-artifacts-${version}-reactnative-dependencies-${buildType.toLowerCase()}.tar.gz`;
 }
 
 function getNightlyTarballUrl(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
 ) /*: string */ {
-  const params = `r=snapshots&g=com.facebook.react&a=react-native-artifacts&c=reactnative-dependencies-${buildType}&e=tar.gz&v=${version}-SNAPSHOT`;
+  const params = `r=snapshots&g=com.facebook.react&a=react-native-artifacts&c=reactnative-dependencies-${buildType.toLowerCase()}&e=tar.gz&v=${version}-SNAPSHOT`;
   return `https://oss.sonatype.org/service/local/artifact/maven/redirect?${params}`;
 }
 
@@ -220,7 +231,7 @@ async function reactNativeDependenciesArtifactExists(
  */
 async function reactNativeDependenciesSourceType(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
 ) /*: Promise<ReactNativeDependenciesEngineSourceType> */ {
   const tarballUrl = getTarballUrl(version, buildType);
   if (await reactNativeDependenciesArtifactExists(tarballUrl)) {
@@ -246,7 +257,7 @@ async function reactNativeDependenciesSourceType(
 async function resolveSourceFromSourceType(
   sourceType /*: ReactNativeDependenciesEngineSourceType */,
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string*/,
 ) /*: Promise<string> */ {
   switch (sourceType) {
@@ -264,7 +275,7 @@ async function resolveSourceFromSourceType(
 
 async function downloadPrebuildTarball(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string*/,
 ) /*: Promise<string> */ {
   const url = getTarballUrl(version, buildType);
@@ -278,7 +289,7 @@ async function downloadPrebuildTarball(
 
 async function downloadPrebuiltNightlyTarball(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string*/,
 ) /*: Promise<string> */ {
   const url = await resolveUrlRedirects(
@@ -295,7 +306,7 @@ async function downloadPrebuiltNightlyTarball(
 
 async function downloadStableReactNativeDependencies(
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string */,
 ) /*: Promise<string> */ {
   const tarballUrl = getTarballUrl(version, buildType);
@@ -313,7 +324,7 @@ async function downloadStableReactNativeDependencies(
 async function downloadReactNativeDependenciesTarball(
   tarballUrl /*: string */,
   version /*: string */,
-  buildType /*: 'debug' | 'release' */,
+  buildType /*: BuildFlavor */,
   artifactsPath /*: string */,
 ) /*: Promise<string> */ {
   const destPath = buildType

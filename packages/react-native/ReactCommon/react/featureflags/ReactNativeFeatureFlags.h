@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @generated SignedSource<<f28e23028234cda83f67e0386fdd9f32>>
+ * @generated SignedSource<<25b3585f3648fe156fab4a5abbf32e60>>
  */
 
 /**
@@ -50,11 +50,6 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool animatedShouldSignalBatch();
 
   /**
-   * Do not incorrectly ceil the available width of an Android text layout
-   */
-  RN_EXPORT static bool avoidCeilingAvailableAndroidTextWidth();
-
-  /**
    * Use a C++ implementation of Native Animated instead of the platform implementation.
    */
   RN_EXPORT static bool cxxNativeAnimatedEnabled();
@@ -68,6 +63,11 @@ class ReactNativeFeatureFlags {
    * Prevent FabricMountingManager from reordering mountItems, which may lead to invalid state on the UI thread
    */
   RN_EXPORT static bool disableMountItemReorderingAndroid();
+
+  /**
+   * Turns off the global measurement cache used by TextLayoutManager on Android.
+   */
+  RN_EXPORT static bool disableTextLayoutManagerCacheAndroid();
 
   /**
    * When enabled, the accessibilityOrder prop will propagate to native platforms and define the accessibility order.
@@ -225,6 +225,11 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool enableViewRecyclingForView();
 
   /**
+   * Enables VirtualView debug features such as logging and overlays.
+   */
+  RN_EXPORT static bool enableVirtualViewDebugFeatures();
+
+  /**
    * Uses the default event priority instead of the discreet event priority by default when dispatching events from Fabric to React.
    */
   RN_EXPORT static bool fixMappingOfEventPrioritiesBetweenFabricAndReact();
@@ -240,11 +245,6 @@ class ReactNativeFeatureFlags {
   RN_EXPORT static bool fuseboxNetworkInspectionEnabled();
 
   /**
-   * Set maxLines and ellipsization during Android layout creation
-   */
-  RN_EXPORT static bool incorporateMaxLinesDuringAndroidLayout();
-
-  /**
    * Enables storing js caller stack when creating promise in native module. This is useful in case of Promise rejection and tracing the cause.
    */
   RN_EXPORT static bool traceTurboModulePromiseRejectionsOnAndroid();
@@ -258,11 +258,6 @@ class ReactNativeFeatureFlags {
    * In Bridgeless mode, use the always available javascript error reporting pipeline.
    */
   RN_EXPORT static bool useAlwaysAvailableJSErrorHandling();
-
-  /**
-   * Trust the width of a text layout we create, instead of re-deriving it from its contents
-   */
-  RN_EXPORT static bool useAndroidTextLayoutWidthDirectly();
 
   /**
    * Should this application enable the Fabric Interop Layer for Android? If yes, the application will behave so that it can accept non-Fabric components and render them on Fabric. This toggle is controlling extra logic such as custom event dispatching that are needed for the Fabric Interop Layer to work correctly.
@@ -298,6 +293,11 @@ class ReactNativeFeatureFlags {
    * When enabled, NativeModules will be executed by using the TurboModule system
    */
   RN_EXPORT static bool useTurboModules();
+
+  /**
+   * Initial prerender ratio for VirtualView.
+   */
+  RN_EXPORT static double virtualViewPrerenderRatio();
 
   /**
    * Overrides the feature flags with the ones provided by the given provider

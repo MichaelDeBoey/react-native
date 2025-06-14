@@ -13,6 +13,7 @@ import type {PluginObj} from '@babel/core';
 import * as t from '@babel/types';
 
 function sortMembers<T>(members: T[]): T[] {
+  const indexSignature = [];
   const properties = [];
   const functionProperties = [];
   const methods = [];
@@ -34,6 +35,8 @@ function sortMembers<T>(members: T[]): T[] {
       } else {
         properties.push(member);
       }
+    } else if (t.isTSIndexSignature(member)) {
+      indexSignature.push(member);
     } else {
       methods.push(member);
     }
@@ -45,12 +48,16 @@ function sortMembers<T>(members: T[]): T[] {
       ? a.key.id.name
       : t.isTSEnumMember(a)
         ? a.id.name
-        : a.key.name;
+        : t.isStringLiteral(a.key)
+          ? a.key.value
+          : a.key.name;
     const bName = t.isClassPrivateProperty(b)
       ? b.key.id.name
       : t.isTSEnumMember(b)
         ? b.id.name
-        : b.key.name;
+        : t.isStringLiteral(b.key)
+          ? b.key.value
+          : b.key.name;
 
     if (aName === undefined || bName === undefined) {
       return 0;
@@ -64,7 +71,8 @@ function sortMembers<T>(members: T[]): T[] {
   methods.sort(comparator);
   enumMembers.sort(comparator);
 
-  return properties
+  return indexSignature
+    .concat(properties)
     .concat(functionProperties)
     .concat(methods)
     .concat(enumMembers);
